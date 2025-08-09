@@ -29,7 +29,7 @@ def render_header():
     """Render the main application header"""
     st.markdown("""
     <div class="main-header">
-        <h1>📄 Invoice Data Extraction</h1>
+        <h1>📄 InvoiceVision</h1>
         <p>Upload your invoice images and extract structured data using Qwen 2.5 VL via OpenRouter</p>
     </div>
     """, unsafe_allow_html=True)
@@ -255,3 +255,4 @@ def render_footer():
     """Render application footer"""
     st.markdown("---")
     st.markdown("**🏢 Powered by** Qwen 2.5 VL • **🛠️ Built with** Streamlit + OpenRouter • **📊 Features** OCR • Data Export • AI Extraction")
+
