@@ -53,15 +53,12 @@ def display_vendor_info(vendor_data: Dict[str, str]):
     st.markdown("#### 🏢 Vendor Information")
     st.markdown('<div class="vendor-info">', unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write(f"**Name:** {vendor_data.get('name', 'N/A')}")
-        st.write(f"**Phone:** {vendor_data.get('phone', 'N/A')}")
-    
-    with col2:
-        st.write(f"**Email:** {vendor_data.get('email', 'N/A')}")
-        
+    # Remove nested columns - display in a clean vertical layout
+    st.write(f"**Name:** {vendor_data.get('name', 'N/A')}")
+    st.write(f"**Phone:** {vendor_data.get('phone', 'N/A')}")
+    st.write(f"**Email:** {vendor_data.get('email', 'N/A')}")
     st.write(f"**Address:** {vendor_data.get('address', 'N/A')}")
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 def display_billing_info(billing_data: Dict[str, str]):
@@ -120,15 +117,11 @@ def display_financial_summary(data: Dict[str, Any]):
     st.markdown("#### 💰 Financial Summary")
     st.markdown('<div class="financial-summary">', unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.write(f"**Subtotal:** {format_currency(data.get('subtotal', ''), currency)}")
-        st.write(f"**Tax Rate:** {data.get('tax_rate', 'N/A')}")
-        
-    with col2:
-        st.write(f"**Tax Amount:** {format_currency(data.get('tax_amount', ''), currency)}")
-        st.write(f"**Total Amount:** {format_currency(data.get('total_amount', ''), currency)}")
+    # Remove nested columns - display in a clean vertical layout
+    st.write(f"**Subtotal:** {format_currency(data.get('subtotal', ''), currency)}")
+    st.write(f"**Tax Rate:** {data.get('tax_rate', 'N/A')}")
+    st.write(f"**Tax Amount:** {format_currency(data.get('tax_amount', ''), currency)}")
+    st.write(f"**Total Amount:** {format_currency(data.get('total_amount', ''), currency)}")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -169,6 +162,7 @@ def display_extraction_stats(data: Dict[str, Any]):
     
     st.markdown("#### 📊 Extraction Statistics")
     
+    # Use metric cards in a single row (this should work as it's at the top level)
     col1, col2, col3 = st.columns(3)
     
     display_metric_card("Fields Extracted", f"{extracted_fields}/{total_fields}", col1)
@@ -184,19 +178,11 @@ def create_download_section(data: Dict[str, Any]):
     """
     st.markdown("### 💾 Export Options")
     
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("**📄 JSON Export**")
-        st.write("Complete invoice data with all extracted fields")
-    
-    with col2:
-        st.markdown("**📊 CSV Export**")
-        st.write("Line items in spreadsheet format")
-    
-    with col3:
-        st.markdown("**📋 Summary**")
-        st.write("Key metrics and totals")
+    # Check if this function is called within existing columns
+    # If so, display vertically instead of creating new columns
+    st.markdown("**📄 JSON Export** - Complete invoice data with all extracted fields")
+    st.markdown("**📊 CSV Export** - Line items in spreadsheet format")  
+    st.markdown("**📋 Summary** - Key metrics and totals")
 
 def display_processing_status(status: str, message: str = ""):
     """
