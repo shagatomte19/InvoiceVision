@@ -255,4 +255,10 @@ def render_footer():
     """Render application footer"""
     st.markdown("---")
     st.markdown("**🏢 Powered by** Qwen 2.5 VL • **🛠️ Built with** Streamlit + OpenRouter • **📊 Features** OCR • Data Export • AI Extraction")
+    st.markdown("""
+    <div style="text-align: center; margin-top: 10px; color: #666;">
+        <p>👨‍💻 Made by <a href="https://www.linkedin.com/in/shagatomte19/" target="_blank" style="color: #1f77b4; text-decoration: none;">Enamul Hasan Shagato</a></p>
+    </div>
+    """, unsafe_allow_html=True)
+
 
