@@ -2,7 +2,7 @@
 
 A modern Streamlit application for extracting structured data from invoice images using Qwen 2.5 VL via OpenRouter API.
 
-![Python](https://img.shields.io/badge/python-v3.8+-blue.svg)
+![Python](https://img.shields.io/badge/python-v3.10+-blue.svg)
 ![Streamlit](https://img.shields.io/badge/streamlit-v1.28+-red.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
@@ -37,7 +37,7 @@ mkdir .streamlit
 Create `.streamlit/secrets.toml`:
 ```toml
 OPENROUTER_API_KEY = "your_openrouter_api_key_here"
-OPENROUTER_SITE_URL = "https://github.com/yourusername/invoice-ocr-extractor"
+OPENROUTER_SITE_URL = "https://github.com/shagatomte19/invoice-ocr-extractor"
 OPENROUTER_SITE_NAME = "Invoice OCR Extractor"
 ```
 
@@ -45,9 +45,6 @@ OPENROUTER_SITE_NAME = "Invoice OCR Extractor"
 ```bash
 export OPENROUTER_API_KEY="your_api_key_here"
 ```
-
-**Option C: Manual Input**
-Enter API key directly in the sidebar when running the app.
 
 ### 4. Get OpenRouter API Key
 1. Visit [OpenRouter.ai](https://openrouter.ai/)
