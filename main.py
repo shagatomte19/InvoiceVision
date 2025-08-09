@@ -25,22 +25,21 @@ def main():
     # Render sidebar and get configuration
     config = render_sidebar()
     
-    # Main content area
-    col1, col2 = st.columns([1, 1])
+    # Main content area - remove columns to avoid nesting issues
+    # Upload section
+    st.markdown("### 📤 Upload Invoice")
+    uploaded_file = render_upload_section()
     
-    with col1:
-        # Upload section
-        uploaded_file = render_upload_section()
-        
-        if uploaded_file is not None:
-            from utils.image_processor import process_uploaded_file
-            process_uploaded_file(uploaded_file, config)
+    if uploaded_file is not None:
+        from utils.image_processor import process_uploaded_file
+        process_uploaded_file(uploaded_file, config)
     
-    with col2:
-        # Results section
-        if st.session_state.processing_complete:
-            render_results_section()
-            handle_export_options()
+    # Results section - display below upload section
+    if st.session_state.processing_complete:
+        st.markdown("---")  # Separator between sections
+        st.markdown("### 📊 Extraction Results")
+        render_results_section()
+        handle_export_options()
     
     # Footer
     st.markdown("---")
