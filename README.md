@@ -20,7 +20,7 @@ A modern Streamlit application for extracting structured data from invoice image
 ### 1. Clone Repository
 ```bash
 git clone https://github.com/shagatomte19/InvoiceVision.git
-cd invoice-ocr-extractor
+cd InvoiceVision
 ```
 
 ### 2. Install Dependencies
