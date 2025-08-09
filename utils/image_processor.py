@@ -36,7 +36,7 @@ def process_uploaded_file(uploaded_file, config: Dict[str, Any]) -> None:
     
     if uploaded_file.type.startswith('image'):
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Invoice", use_container_width=True)
+        st.image(image, caption="Uploaded Invoice", use_column_width=True)
         
         # Process button
         if st.button("🚀 Extract Data", type="primary"):
@@ -99,4 +99,5 @@ def process_uploaded_file(uploaded_file, config: Dict[str, Any]) -> None:
         2. Or implement PDF-to-image conversion using libraries like `pdf2image`
         """)
     else:
+
         st.error("Unsupported file type. Please upload PNG, JPG, or JPEG files.")
