@@ -43,50 +43,20 @@ def render_sidebar() -> Dict[str, Any]:
     """
     config = {}
     
+    # Set API configuration from secrets or defaults
+    try:
+        config['api_key'] = st.secrets.get("OPENROUTER_API_KEY", "")
+        config['site_url'] = st.secrets.get("OPENROUTER_SITE_URL", "https://localhost:8501")
+        config['site_name'] = st.secrets.get("OPENROUTER_SITE_NAME", "Invoice OCR Extractor")
+    except:
+        config['api_key'] = ""
+        config['site_url'] = "https://localhost:8501"
+        config['site_name'] = "Invoice OCR Extractor"
+    
+    config['api_endpoint'] = DEFAULT_API_ENDPOINT
+    
     with st.sidebar:
         st.header("⚙️ Configuration")
-        
-        # API Configuration Section
-        def render_api_settings():
-            # Try to get API key from secrets first, then allow manual input
-            default_api_key = ""
-            try:
-                default_api_key = st.secrets.get("OPENROUTER_API_KEY", "")
-            except:
-                pass
-            
-            config['api_key'] = st.text_input(
-                "OpenRouter API Key", 
-                value=default_api_key,
-                type="password", 
-                help="Enter your OpenRouter API key or configure in Streamlit secrets"
-            )
-            
-            # Try to get other settings from secrets with fallbacks
-            try:
-                default_site_url = st.secrets.get("OPENROUTER_SITE_URL", "https://localhost:8501")
-                default_site_name = st.secrets.get("OPENROUTER_SITE_NAME", "Invoice OCR Extractor")
-            except:
-                default_site_url = "https://localhost:8501"
-                default_site_name = "Invoice OCR Extractor"
-            
-            config['api_endpoint'] = st.text_input(
-                "API Endpoint", 
-                value=DEFAULT_API_ENDPOINT, 
-                help="OpenRouter API endpoint"
-            )
-            config['site_url'] = st.text_input(
-                "Site URL (Optional)", 
-                value=default_site_url, 
-                help="Your site URL for OpenRouter rankings"
-            )
-            config['site_name'] = st.text_input(
-                "Site Name (Optional)", 
-                value=default_site_name, 
-                help="Your site name for OpenRouter rankings"
-            )
-        
-        create_sidebar_section("API Settings", render_api_settings)
         
         # Model Configuration Section
         def render_model_settings():
@@ -124,12 +94,12 @@ def render_sidebar() -> Dict[str, Any]:
         
         create_sidebar_section("Extraction Options", render_extraction_options)
         
-        # API Status Section
-        def render_api_status():
+        # Status Section
+        def render_status():
             if config.get('api_key'):
-                st.success("✅ API Key provided")
+                st.success("✅ API configured")
             else:
-                st.warning("⚠️ API Key required")
+                st.warning("⚠️ API key not configured in secrets")
             
             # Show selected extraction fields
             selected_fields = [
@@ -141,7 +111,7 @@ def render_sidebar() -> Dict[str, Any]:
             if selected_fields:
                 st.info(f"📋 Extracting: {', '.join(selected_fields)}")
         
-        create_sidebar_section("Status", render_api_status)
+        create_sidebar_section("Status", render_status)
     
     return config
 
@@ -166,13 +136,7 @@ def render_upload_section():
         
         # Show supported formats
         st.markdown("**Supported formats:**")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.write("📷 PNG")
-        with col2:
-            st.write("🖼️ JPG/JPEG")
-        with col3:
-            st.write("📄 PDF (coming soon)")
+        st.markdown("📷 PNG • 🖼️ JPG/JPEG • 📄 PDF (coming soon)")
     
     st.markdown('</div>', unsafe_allow_html=True)
     return uploaded_file
@@ -187,27 +151,23 @@ def render_results_section():
     st.markdown('<div class="results-container">', unsafe_allow_html=True)
     st.markdown("### 📊 Extracted Invoice Data")
     
-    # Basic Information Cards
+    # Basic Information Cards - remove columns to avoid nesting
     render_basic_info_cards(data)
     
-    # Detailed Information Sections
-    col1, col2 = st.columns(2)
+    # Detailed Information Sections - remove columns to avoid nesting
+    # Vendor Information
+    if data.get('vendor'):
+        display_vendor_info(data['vendor'])
     
-    with col1:
-        # Vendor Information
-        if data.get('vendor'):
-            display_vendor_info(data['vendor'])
-        
-        # Financial Summary
-        display_financial_summary(data)
+    # Financial Summary
+    display_financial_summary(data)
     
-    with col2:
-        # Billing Information
-        if data.get('billing_to'):
-            display_billing_info(data['billing_to'])
-        
-        # Extraction Statistics
-        display_extraction_stats(data)
+    # Billing Information
+    if data.get('billing_to'):
+        display_billing_info(data['billing_to'])
+    
+    # Extraction Statistics
+    display_extraction_stats(data)
     
     # Line Items (full width)
     if data.get('line_items'):
@@ -222,38 +182,22 @@ def render_basic_info_cards(data: Dict[str, Any]):
     Args:
         data: Invoice data dictionary
     """
-    col1, col2, col3, col4 = st.columns(4)
+    st.markdown("#### 📋 Basic Information")
     
-    # Invoice Number
-    display_metric_card(
-        "Invoice #", 
-        data.get('invoice_number', 'N/A'), 
-        col1
-    )
+    # Display metrics vertically to avoid column nesting
+    invoice_num = data.get('invoice_number', 'N/A')
+    st.markdown(f"**Invoice #:** {invoice_num}")
     
-    # Invoice Date
-    display_metric_card(
-        "Date", 
-        data.get('invoice_date', 'N/A'), 
-        col2
-    )
+    invoice_date = data.get('invoice_date', 'N/A')
+    st.markdown(f"**Date:** {invoice_date}")
     
-    # Total Amount
     currency = data.get('currency', '')
     total = data.get('total_amount', 'N/A')
     total_display = f"{currency} {total}".strip() if total != 'N/A' else 'N/A'
-    display_metric_card(
-        "Total Amount", 
-        total_display, 
-        col3
-    )
+    st.markdown(f"**Total Amount:** {total_display}")
     
-    # Due Date
-    display_metric_card(
-        "Due Date", 
-        data.get('due_date', 'N/A'), 
-        col4
-    )
+    due_date = data.get('due_date', 'N/A')
+    st.markdown(f"**Due Date:** {due_date}")
 
 def render_error_state(error_message: str):
     """
@@ -310,16 +254,4 @@ def render_help_section():
 def render_footer():
     """Render application footer"""
     st.markdown("---")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("**🏢 Powered by**")
-        st.write("Qwen 2.5 VL")
-    
-    with col2:
-        st.markdown("**🛠️ Built with**")
-        st.write("Streamlit + OpenRouter")
-    
-    with col3:
-        st.markdown("**📊 Features**")
-        st.write("OCR • Data Export • AI Extraction")
+    st.markdown("**🏢 Powered by** Qwen 2.5 VL • **🛠️ Built with** Streamlit + OpenRouter • **📊 Features** OCR • Data Export • AI Extraction")
